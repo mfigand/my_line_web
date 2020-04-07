@@ -1,9 +1,8 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from './shared/auth.service';
 
-// import { AuthenticationService } from './_services';
-// import { User } from './_models';
+import { AuthService } from './shared/auth.service';
+import { User } from './shared/user';
 
 @Component({
   selector: 'app-root',
@@ -12,13 +11,13 @@ import { AuthService } from './shared/auth.service';
 })
 export class AppComponent {
   title = 'my-line';
-  currentUser = true;
+  currentUser: User;
 
     constructor(
         private router: Router,
         private authService: AuthService
     ) {
-        // this.authService.currentUser.subscribe(x => this.currentUser = x);
+        this.authService.currentUser.subscribe(x => this.currentUser = x);
     }
 
     logout() {
