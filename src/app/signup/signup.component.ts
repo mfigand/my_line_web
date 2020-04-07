@@ -49,7 +49,6 @@ export class SignupComponent implements OnInit {
     this.loading = true;
 
     this.authService.signUp(this.signupForm.value).subscribe((res) => {
-      debugger
       if (res.data.id) {
         this.signupForm.reset()
         this.router.navigate(['/login']);
