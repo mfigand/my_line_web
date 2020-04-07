@@ -4,6 +4,7 @@ import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
+import * as jwt_decode from "jwt-decode";
 
 @Injectable({
   providedIn: 'root'
@@ -30,12 +31,14 @@ export class AuthService {
 
   // Sign-in
   signIn(user: User) {
-    return this.http.post<any>(`${this.apiEndpoint}/signin`, user)
+    return this.http.post<any>(`${this.apiEndpoint}/v1/authenticate`, user)
       .subscribe((res: any) => {
-        localStorage.setItem('access_token', res.token)
-        this.getUserProfile(res._id).subscribe((res) => {
-          this.currentUser = res;
-          this.router.navigate(['user-profile/' + res.msg._id]);
+        let tokenInfo = this.getDecodedAccessToken(res.data)
+        localStorage.setItem('access_token', res.data)
+
+        this.getUserProfile(tokenInfo.user_id).subscribe((res) => {
+          this.currentUser = res.data;
+          this.router.navigate(['users/' + res.data.id]);
         })
       })
   }
@@ -44,12 +47,21 @@ export class AuthService {
     return localStorage.getItem('access_token');
   }
 
+  getDecodedAccessToken(token: string): any {
+    try{
+        return jwt_decode(token);
+    }
+    catch(Error){
+        return null;
+    }
+  }
+
   get isLoggedIn(): boolean {
     let authToken = localStorage.getItem('access_token');
     return (authToken !== null) ? true : false;
   }
 
-  doLogout() {
+  logout() {
     let removeToken = localStorage.removeItem('access_token');
     if (removeToken == null) {
       this.router.navigate(['log-in']);
@@ -58,8 +70,10 @@ export class AuthService {
 
   // User profile
   getUserProfile(id): Observable<any> {
-    let api = `${this.apiEndpoint}/user-profile/${id}`;
-    return this.http.get(api, { headers: this.headers }).pipe(
+    let api = `${this.apiEndpoint}/v1/users/${id}`;
+    let authHeaders = this.headers.append('Authentication', this.getToken())
+
+    return this.http.get(api, { headers: authHeaders }).pipe(
       map((res: Response) => {
         return res || {}
       }),
