@@ -59,32 +59,20 @@ export class AuthService {
   }
 
   // Sign-in
-  signIn(user: User) {
+  signIn(user: User): Observable<any> {
+    let alertService2 = this.alertService
     return this.http.post<any>(`${this.apiEndpoint}/v1/authenticate`, user)
-      .subscribe(
-        res => {
-          let tokenInfo = this.getDecodedAccessToken(res.data)
-          localStorage.setItem('access_token', res.data)
-
-          this.getUserProfile(tokenInfo.user_id).subscribe((res) => {
-            // store user details and jwt token in local storage to keep user logged in between page refreshes
-            localStorage.setItem('currentUser', JSON.stringify(res.data));
-            this.currentUserSubject.next(user);
-            this.router.navigate(['users/' + res.data.id]);
-          })
-        },
-        error => {
-            // this.alertService.error(error.error.data);
-            this.handleError(error);
-        })
+      .pipe(
+        catchError(this.handleError)
+      )
   }
 
   logout() {
-    // remove user from local storage and set current user to null
-    localStorage.removeItem('currentUser');
-    this.currentUserSubject.next(null);
     let removeToken = localStorage.removeItem('access_token');
     if (removeToken == null) {
+      // remove user from local storage and set current user to null
+      localStorage.removeItem('currentUser');
+      this.currentUserSubject.next(null);
       this.router.navigate(['login']);
     }
   }
@@ -95,15 +83,18 @@ export class AuthService {
     let authHeaders = this.headers.append('Authentication', this.getToken())
 
     return this.http.get(api, { headers: authHeaders }).pipe(
-      map((res: Response) => {
-        return res || {}
+      map((res: any) => {
+        // store user details and jwt token in local storage to keep user logged in between page refreshes
+        localStorage.setItem('currentUser', JSON.stringify(res.data));
+        this.currentUserSubject.next(res.data);
+        return res.data || {}
       }),
       catchError(this.handleError)
     )
   }
 
   // Error 
-  handleError(error: HttpErrorResponse) {
+  handleError = (error: HttpErrorResponse) => {
     let msg = '';
     let alertMsg = '';
     if (error.error instanceof ErrorEvent) {
@@ -112,10 +103,8 @@ export class AuthService {
     } else {
       // server-side error
       msg = `Error Code: ${error.status}\nMessage: ${error.message}`;
-      alertMsg = error.error.data
+      this.alertService.error(error.error.data);
     }
-
-    this.alertService.error(alertMsg);
     return throwError(msg);
   }
 }

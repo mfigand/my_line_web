@@ -44,7 +44,15 @@ export class LoginComponent implements OnInit {
       }
 
       this.loading = true;
-      this.authService.signIn(this.loginForm.value);
+
+      this.authService.signIn(this.loginForm.value).subscribe((res) => {
+        localStorage.setItem('access_token', res.data)
+        let tokenInfo = this.authService.getDecodedAccessToken(res.data)
+        this.authService.getUserProfile(tokenInfo.user_id).subscribe((res) => {
+          this.router.navigate(['users/' + res.id]);
+        })
+      })
+
       this.loading = false;
   }
 }
