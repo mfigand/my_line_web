@@ -9,12 +9,18 @@ import { User } from '../shared/user';
   styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent implements OnInit {
-  currentUser: User;
+  currentUser: User = { id: '',
+                        name: '',
+                        lastname: '',
+                        email: '',
+                        password: '' };
 
   constructor(
     private authService: AuthService
   ) { 
-    this.authService.currentUser.subscribe(res => this.currentUser = res);
+    this.authService.currentUser.subscribe(res => {
+        if (res) { this.currentUser = res }
+      });
   }
 
   ngOnInit(): void {

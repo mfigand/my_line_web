@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 
 import { AuthService } from './shared/auth.service';
 import { User } from './shared/user';
+import { last } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -11,13 +12,19 @@ import { User } from './shared/user';
 })
 export class AppComponent {
   title = 'my-line';
-  currentUser: User;
+  currentUser: User = { id: '',
+                        name: '',
+                        lastname: '',
+                        email: '',
+                        password: '' };
 
     constructor(
         private router: Router,
         private authService: AuthService
     ) {
-        this.authService.currentUser.subscribe(res => this.currentUser = res);
+        this.authService.currentUser.subscribe(res => {
+          if (res) { this.currentUser = res }
+        });
     }
 
     logout() {
