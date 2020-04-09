@@ -49,7 +49,7 @@ export class LoginComponent implements OnInit {
         localStorage.setItem('access_token', res.data)
         let tokenInfo = this.authService.getDecodedAccessToken(res.data)
         this.authService.getUserProfile(tokenInfo.user_id).subscribe((res) => {
-          this.router.navigate(['users/' + res.id]);
+          this.router.navigate(['profile']);
         })
       })
 
