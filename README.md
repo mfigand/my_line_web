@@ -1,10 +1,32 @@
 # MyLine WEB
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.1.0.
+Containerized project generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.1.0.
 
-## things to cover
+## Install steps
 
-use SCSS
+From root:
+
+Build the image
+* ./run.sh build
+
+Boot the app (./run.sh dev help)
+* ./run.sh dev server
+
+Run Unit tests (./run.sh test help)
+* ./run.sh test
+
+Run End To End tests (./run.sh test help)
+* ./run.sh test e2e
+
+* System dependencies
+  - docker
+  - docker-compose
+
+
+## Inside Docker shell you can run:
+
+Get docker shell (./run.sh dev help)
+* ./run.sh dev sh
 
 ## Development server
 
@@ -33,3 +55,8 @@ Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protrac
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+
+
+## things to cover
+
+use SCSS
