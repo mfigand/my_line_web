@@ -1,0 +1,35 @@
+#!/bin/bash
+
+function run_in_docker {
+  # --rm tell Docker daemon that once its done running, erase everything related to it and save the disk space
+  docker-compose run --rm web $@
+}
+
+function print_help {
+  cat <<HELP
+  ./run.sh test <command> <arguments>
+  commands:
+  - unit-test: ng test
+  - coverage: ng test --code-coverage
+  - e2e: ng e2e
+  - no_command: ng test --code-coverage
+HELP
+}
+
+case "$1" in
+unit-test)
+  run_in_docker ng test
+  ;;
+coverage)
+  run_in_docker ng test --code-coverage
+  ;;
+e2e)
+  run_in_docker ng e2e
+  ;;
+help)
+  print_help; exit 0
+  ;;
+*)
+  run_in_docker ng test --code-coverage $@
+  ;;
+esac
