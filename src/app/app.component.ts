@@ -11,11 +11,7 @@ import { User } from './shared/user';
 })
 export class AppComponent {
   title = 'my-line';
-  currentUser: User = { id: '',
-                        name: '',
-                        lastname: '',
-                        email: '',
-                        password: '' };
+  currentUser: User;
 
     constructor(
         private router: Router,
