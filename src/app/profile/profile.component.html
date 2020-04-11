@@ -1,2 +1,30 @@
 <h1>Hi {{currentUser.name}}!</h1>
 <p>You're logged in!!</p>
+
+<div>
+  <h3 (click)="toggleCreateLineForm()">Create new Line</h3>
+  <div *ngIf="showCreateLine">
+    <form [formGroup]="createLineForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+          <label for="title">Title</label>
+          <input type="text" formControlName="title" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.title.errors }" />
+          <div *ngIf="submitted && f.title.errors" class="invalid-feedback">
+              <div *ngIf="f.title.errors.required">Title is required</div>
+          </div>
+      </div>
+      <div class="form-group">
+          <label for="protagonist">Protagonist</label>
+          <input type="protagonist" formControlName="protagonist" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.protagonist.errors }" />
+          <div *ngIf="submitted && f.protagonist.errors" class="invalid-feedback">
+              <div *ngIf="f.protagonist.errors.required">Protagonist is required</div>
+          </div>
+      </div>
+      <div class="form-group">
+          <button [disabled]="loading" class="btn btn-primary">
+              <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+              Create
+          </button>
+      </div>
+    </form>
+  </div>
+</div>
