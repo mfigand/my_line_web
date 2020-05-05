@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 
 import { AuthService } from './shared/auth.service';
 import { User } from './shared/user';
+import { log } from 'util';
 
 @Component({
   selector: 'app-root',
@@ -24,6 +25,5 @@ export class AppComponent {
 
     logout() {
         this.authService.logout();
-        this.router.navigate(['/login']);
     }
 }

@@ -49,7 +49,6 @@ export class AuthService {
     }
   }
 
-  // Sign-up
   signUp(user: User): Observable<any> {
     let api = `${this.apiEndpoint}/v1/users`;
     return this.http.post(api, user)
@@ -58,9 +57,7 @@ export class AuthService {
       )
   }
 
-  // Sign-in
   signIn(user: User): Observable<any> {
-    let alertService2 = this.alertService
     return this.http.post<any>(`${this.apiEndpoint}/v1/authenticate`, user)
       .pipe(
         catchError(this.handleError)
@@ -77,7 +74,6 @@ export class AuthService {
     }
   }
 
-  // User profile
   getUserProfile(id): Observable<any> {
     let api = `${this.apiEndpoint}/v1/users/${id}`;
     let authHeaders = this.headers.append('Authentication', this.getToken())
@@ -96,7 +92,6 @@ export class AuthService {
   // Error 
   handleError = (error: HttpErrorResponse) => {
     let msg = '';
-    let alertMsg = '';
     if (error.error instanceof ErrorEvent) {
       // client-side error
       msg = error.error.message;

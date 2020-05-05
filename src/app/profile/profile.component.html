@@ -1,10 +1,12 @@
 <h1>Hi {{currentUser.name}}!</h1>
 <p>You're logged in!!</p>
 
+<!-- Create Line -->
+<!-- ===================== -->
 <div>
   <h3 (click)="toggleCreateLineForm()">Create new Line</h3>
   <div *ngIf="showCreateLine">
-    <form [formGroup]="createLineForm" (ngSubmit)="onSubmit()">
+    <form [formGroup]="createLineForm" (ngSubmit)="createTimeline()">
       <div class="form-group">
           <label for="title">Title</label>
           <input type="text" formControlName="title" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.title.errors }" />
@@ -13,12 +15,19 @@
           </div>
       </div>
       <div class="form-group">
-          <label for="protagonist">Protagonist</label>
-          <input type="protagonist" formControlName="protagonist" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.protagonist.errors }" />
-          <div *ngIf="submitted && f.protagonist.errors" class="invalid-feedback">
-              <div *ngIf="f.protagonist.errors.required">Protagonist is required</div>
+          <label for="protagonist_email">Protagonist email</label>
+          <input type="protagonist_email" formControlName="protagonist_email" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.protagonist_email.errors }" />
+          <div *ngIf="submitted && f.protagonist_email.errors" class="invalid-feedback">
+              <div *ngIf="f.protagonist_email.errors.required">Protagonist email is required</div>
           </div>
       </div>
+      <div class="form-group" hidden>
+        <label for="author_id">User id</label>
+        <input type="author_id" formControlName="author_id" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.author_id.errors }" />
+        <div *ngIf="submitted && f.author_id.errors" class="invalid-feedback">
+          <div *ngIf="f.author_id.errors.required">User most be logged</div>
+      </div>
+    </div>
       <div class="form-group">
           <button [disabled]="loading" class="btn btn-primary">
               <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
@@ -28,3 +37,32 @@
     </form>
   </div>
 </div>
+
+<!-- Timeline Index
+======================== -->
+
+<div>
+  <h3 (click)="authorIndex()">Created Timelines</h3>
+  <select id="createdTimelines">
+    <option *ngFor="let timeline of createdTimelines; let i = index" [value]="createdTimelines[i].id">
+      {{createdTimelines[i].title}}
+    </option>
+  </select>
+
+  <div>
+    timeline title
+    <h1>{{selectedCreatedTimeline.title}}</h1>
+    first story title
+    <h1>{{selectedStory.title}}</h1>
+  </div>
+</div>
+
+<!-- 
+<div>
+  <h3>Starring Timelines</h3>
+  <ul>
+    <li *ngFor="let timeline of timelines">
+      {{ timeline }}
+    </li>
+  </ul>
+</div> -->
